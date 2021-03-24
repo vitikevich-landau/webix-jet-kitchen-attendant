@@ -19,7 +19,6 @@ export default class TopView extends JetView {
     };
     
     var ui = {
-      
       type: "space",
       css: "app_layout",
       cols: [
@@ -32,7 +31,7 @@ export default class TopView extends JetView {
           rows: [
             {$subview: true}
           ]
-        }
+        },
       ]
     };
     

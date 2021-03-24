@@ -5,16 +5,17 @@ export default class DataView extends JetView {
   config() {
     return {
       view: "datatable",
-      // data,
-      // autoConfig: true,
+      data,
       columns: [
-        {id: "FULLNAME", header: "Наименование", adjust: "data"},
-        {id: "IS_ACTIVE", header: "Дежурный", adjust: "header", css: {'text-align': 'center'}},
-        {id: "SKIPPED", header: "Освобождение от дежурства _", adjust: "header", css: {'text-align': 'center'}},
-        {id: "LAST_ACTIVE", header: "Последнее дежурство", adjust: "header"},
+        {id: "index", header: "#", width: 50},
+        {id: "FULLNAME", header: "ФИО", minWidth: 250, fillspace: true},
+        {id: "IS_ACTIVE", editor: "text", header: "Дежурный", width: 120},
+        {id: "SKIPPED", editor: "text", header: "Освобождение от дежурства", width: 250},
+        {id: "LAST_ACTIVE", header: "Последнее дежурство", width: 200},
       ],
+      editable: true,
+      select: true,
       footer: true,
-      autowidth: true,
       autoheight: true,
       css: "webix_shadow_medium",
     };

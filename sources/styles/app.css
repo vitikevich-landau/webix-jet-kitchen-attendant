@@ -1,8 +1,10 @@
 .datatable-skipped {
-    /*
-        My Styles
-    */
-    background-color: #FFAAAA;
+    /* My Styles */
+    background-color: #ffaaaa;
+}
+.datatable-active {
+    /* My Styles */
+    background-color: #ddFFdd;
 }
 
 .webixappstart {
