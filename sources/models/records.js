@@ -4,7 +4,7 @@ export const data = new webix.DataCollection({
     {NUM: 2, FULLNAME: "Болдузев Денис Вячеславович", IS_ACTIVE: 0, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 3, FULLNAME: "Векессер Павел Владимирович", IS_ACTIVE: 0, SKIPPED: 1, LAST_ACTIVE: null,},
     {NUM: 4, FULLNAME: "Венерцева Наталья Викторовна", IS_ACTIVE: 0, SKIPPED: null, LAST_ACTIVE: null,},
-    {NUM: 5, FULLNAME: "Даминов Владислав Валитович", IS_ACTIVE: 0, SKIPPED: null, LAST_ACTIVE: null},
+    {NUM: 5, FULLNAME: "Даминов Владислав Валитович", IS_ACTIVE: 1, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 6, FULLNAME: "Иванов Павел Нугзарович", IS_ACTIVE: 0, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 7, FULLNAME: "Кулиш Виктор Владимирович", IS_ACTIVE: 0, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 8, FULLNAME: "Кебереков Игорь Павлович", IS_ACTIVE: 0, SKIPPED: null, LAST_ACTIVE: null},
@@ -21,5 +21,12 @@ export const data = new webix.DataCollection({
     {NUM: 19, FULLNAME: "Чиндашев Юрий Иосифович", IS_ACTIVE: 0, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 20, FULLNAME: "Шипкова Кристина Александровна", IS_ACTIVE: 0, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 21, FULLNAME: "Челтушева Регина Артуровна", IS_ACTIVE: 0, SKIPPED: null, LAST_ACTIVE: null},
-  ]
+  ],
+  scheme: {
+    $change(item) {
+      if (item.SKIPPED) {
+        item.$css = "datatable-skipped";
+      }
+    }
+  }
 });
