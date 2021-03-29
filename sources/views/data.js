@@ -43,7 +43,17 @@ export default class DataView extends JetView {
         {
           id: "LAST_ACTIVE",
           header: "Последнее дежурство",
-          width: 200
+          width: 200,
+          format: function (value) {
+            const splitted = value ? value.split("T") : [];
+
+            if (splitted.length) {
+              const parsed = new Date(splitted[0]);
+              return parsed.toLocaleDateString();
+            }
+            
+            return "";
+          }
         },
         /*{
           template: "<span class='webix_icon wxi-trash' style='cursor: pointer; color: darkred'></span>",
@@ -140,23 +150,25 @@ export default class DataView extends JetView {
         onAfterDrop(ctx, ev) {
           const row = this.getItem(ctx.start);
           const {NUM, index} = row;
-
-          this.data.each(v => {
-            this.updateItem(v.id, {...v, NUM: v.index});
-          });
-
-          webix.ajax()
-            .post(
-              "http://192.168.1.35:3000/api/employees/change-order",
-              {NUM, index}
-            )
-            .then(response => {
-              return response.json();
-            })
-            .then(json => {
-              console.log(json);
-            });
           
+          if (NUM !== index) {
+            this.data.each(v => {
+              this.updateItem(v.id, {...v, NUM: v.index});
+            });
+  
+            webix.ajax()
+              .post(
+                "http://192.168.1.35:3000/api/employees/change-order",
+                {NUM, index}
+              )
+              .then(response => {
+                return response.json();
+              })
+              .then(json => {
+                console.log(json);
+              });
+            
+          }
         },
       },
     };
@@ -164,7 +176,7 @@ export default class DataView extends JetView {
   
   init(_$view, _$) {
     super.init(_$view, _$);
-
+    
     
   }
 }
