@@ -1,15 +1,4 @@
-const formatCells = row => {
-  if (row.SKIPPED) {
-    row.$css = "datatable-skipped";
-  } else if (row.IS_ACTIVE) {
-    row.$css = "datatable-active";
-  } else {
-    row.$css = "";
-  }
-};
-
-export const data = new webix.DataCollection({
-  data: [
+export const employees = [
     {NUM: 1, FULLNAME: "Балахнина Екатерина Сергеевна", IS_ACTIVE: null, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 2, FULLNAME: "Болдузев Денис Вячеславович", IS_ACTIVE: null, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 3, FULLNAME: "Векессер Павел Владимирович", IS_ACTIVE: null, SKIPPED: 1, LAST_ACTIVE: null,},
@@ -31,15 +20,4 @@ export const data = new webix.DataCollection({
     {NUM: 19, FULLNAME: "Чиндашев Юрий Иосифович", IS_ACTIVE: null, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 20, FULLNAME: "Шипкова Кристина Александровна", IS_ACTIVE: null, SKIPPED: null, LAST_ACTIVE: null},
     {NUM: 21, FULLNAME: "Челтушева Регина Артуровна", IS_ACTIVE: null, SKIPPED: null, LAST_ACTIVE: null},
-  ],
-  scheme: {
-    $init(obj) {
-      obj.index = this.count();
-
-      formatCells(obj);
-    },
-    $change(obj) {
-      formatCells(obj);
-    }
-  },
-});
+];
