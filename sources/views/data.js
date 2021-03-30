@@ -34,7 +34,7 @@ export default class DataView extends JetView {
         },
         {
           id: "SKIPPED",
-          editor: "text",
+          // editor: "text",
           header: "Освобождение от дежурства",
           width: 240,
           sort: "int",
