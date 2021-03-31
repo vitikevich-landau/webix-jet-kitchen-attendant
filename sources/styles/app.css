@@ -1,7 +1,21 @@
+.hover {
+    /* My Styles */
+    background: lightGrey !important;
+    opacity: .75;
+}
+
+.chart-title {
+    /* My Styles */
+    text-align: center;
+    background: none;
+    border: none;
+}
+
 .datatable-skipped {
     /* My Styles */
     background-color: #ffaaaa;
 }
+
 .datatable-active {
     /* My Styles */
     background-color: #ddFFdd;

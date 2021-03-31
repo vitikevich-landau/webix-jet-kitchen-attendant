@@ -22,16 +22,66 @@ export default class TopView extends JetView {
       type: "space",
       css: "app_layout",
       cols: [
-        {
-          rows: [
-            {css: "webix_shadow_medium", rows: [header, menu]}
-          ]
-        },
+        // {
+        //   rows: [
+        //     {css: "webix_shadow_medium", rows: [header, menu]}
+        //   ]
+        // },
+        // {width: 75},
         {
           padding: {
-            right: 15
+            top: 5,
+            left: 25,
+            right: 25
           },
-          rows: [{$subview: true},]
+          rows: [
+            {
+              cols: [
+                {
+                  
+                  type: "header",
+                  template: "График дежурства",
+                  css: "chart-title"
+                },
+                {
+                  view: "toolbar",
+                  cols: [
+                    {
+                      view: "icon",
+                      icon: "wxi wxi-download",
+                      tooltip: "Скачать PDF",
+                      click: () => {
+                        // webix.message("awefaw");
+                        webix.toPDF("dt", {
+                          // title:true,
+                          filterHTML: false,
+                          styles: true,
+                          autowidth: true,
+                          docHeader: "График дежурства по кухне",
+                          ignore: {
+                            IS_ACTIVE: true,
+                            SKIPPED: true,
+                          },
+                          columns: {
+                            NUM: true,
+                            FULLNAME: {
+                              width: 350
+                            },
+                            LAST_ACTIVE: {
+                              width: 150
+                            }
+                          },
+                          filename: "График дежурства"
+                        });
+                      }
+                    }
+                  ],
+                  css: "chart-title",
+                }
+              ]
+            },
+            {$subview: true}
+          ]
         },
         // {width: 75}
       ]
@@ -40,7 +90,9 @@ export default class TopView extends JetView {
     return ui;
   }
   
-  init() {
-    this.use(plugins.Menu, "top:menu");
+  _init(view, url) {
+    super._init(view, url);
+    
+    // this.use(plugins.Menu, "top:menu");
   }
 }

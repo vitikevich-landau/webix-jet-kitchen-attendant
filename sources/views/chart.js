@@ -1,16 +1,19 @@
 import {JetView} from "webix-jet";
 import {employees} from "models/records";
+import {debounce} from "../utils";
 
-export default class DataView extends JetView {
+export default class ChartView extends JetView {
   config() {
+    let last_used_row;
+    
     return {
       view: "datatable",
       id: "dt",
       // data: employees,
       url: "rest->http://192.168.1.35:3000/api/employees",
-      // save: "rest->http://192.168.1.35:3000/api/",
+      save: "rest->http://192.168.1.35:3000/api/employees/change",
       columns: [
-        {id: "index", header: "#", width: 50},
+        // {id: "index", header: "#", width: 50},
         {
           id: "NUM",
           header: "Очередь",
@@ -34,7 +37,6 @@ export default class DataView extends JetView {
         },
         {
           id: "SKIPPED",
-          // editor: "text",
           header: "Освобождение от дежурства",
           width: 240,
           sort: "int",
@@ -46,14 +48,16 @@ export default class DataView extends JetView {
           width: 200,
           format: function (value) {
             const splitted = value ? value.split("T") : [];
-
+            
             if (splitted.length) {
               const parsed = new Date(splitted[0]);
-              return parsed.toLocaleDateString();
+              // return parsed.toLocaleDateString();
+              return webix.Date.dateToStr("%d.%m.%Y")(parsed);
             }
             
             return "";
-          }
+          },
+          sort: "string"
         },
         /*{
           template: "<span class='webix_icon wxi-trash' style='cursor: pointer; color: darkred'></span>",
@@ -62,8 +66,10 @@ export default class DataView extends JetView {
           css: {"text-align": "center"}
         }*/
       ],
+      // scroll: "y",
       select: true,
-      footer: true,
+      // autoheight: true,
+      // footer: true,
       css: "webix_shadow_medium webix_header_border ",
       editable: true,
       editaction: "dblclick",
@@ -151,11 +157,12 @@ export default class DataView extends JetView {
           const row = this.getItem(ctx.start);
           const {NUM, index} = row;
           
+          // if (NUM !== index) {
+          //   this.data.each(v => {
+          //     this.updateItem(v.id, {...v, NUM: v.index});
+          //   });
+          
           if (NUM !== index) {
-            this.data.each(v => {
-              this.updateItem(v.id, {...v, NUM: v.index});
-            });
-  
             webix.ajax()
               .post(
                 "http://192.168.1.35:3000/api/employees/change-order",
@@ -166,17 +173,46 @@ export default class DataView extends JetView {
               })
               .then(json => {
                 console.log(json);
+                
+                console.log("here");
+                this.clearAll();
+                return this.load(this.config.url.source);
+              })
+              .then(responce => {
+                return responce.json();
+              })
+              .then(json => {
+                
+                webix.message("Данные обновлены");
               });
-            
           }
         },
+        onMouseMoving: debounce(function (ev) {
+          try {
+            const row = this.locate(ev).row;
+            
+            if (row !== last_used_row) {
+              
+              this.removeRowCss(last_used_row, "hover");
+            }
+            
+            this.addRowCss(row, "hover");
+            last_used_row = row;
+          } catch (er) {
+            console.log(er);
+          }
+        }, 15),
+        // onMouseOut: function (event) {
+        //   //console.log(event);
+        //   this.removeRowCss(last_used_row, "hover");
+        // }
       },
+      onMouseMove: {}
     };
   }
   
   init(_$view, _$) {
     super.init(_$view, _$);
-    
     
   }
 }
