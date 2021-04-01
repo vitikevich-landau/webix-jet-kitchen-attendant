@@ -1,5 +1,4 @@
 import {JetView} from "webix-jet";
-import {employees} from "models/records";
 import {debounce} from "../utils";
 
 export default class ChartView extends JetView {
@@ -16,9 +15,9 @@ export default class ChartView extends JetView {
         // {id: "index", header: "#", width: 50},
         {
           id: "NUM",
-          header: "Очередь",
+          header: {text: "Очередь" },
           width: 95,
-          sort: "int"
+          sort: "int",
         },
         {
           id: "FULLNAME",
@@ -59,16 +58,10 @@ export default class ChartView extends JetView {
           },
           sort: "string"
         },
-        /*{
-          template: "<span class='webix_icon wxi-trash' style='cursor: pointer; color: darkred'></span>",
-          // tooltip: "Удалить",
-          width: 50,
-          css: {"text-align": "center"}
-        }*/
       ],
-      // scroll: "y",
+      scroll: false,
       select: true,
-      // autoheight: true,
+      autoheight: true,
       // footer: true,
       css: "webix_shadow_medium webix_header_border ",
       editable: true,
@@ -79,6 +72,7 @@ export default class ChartView extends JetView {
       on: {
         onBeforeLoad() {
           webix.extend(this, webix.ProgressBar);
+          
           this.showProgress();
         },
         onAfterLoad() {
@@ -98,8 +92,6 @@ export default class ChartView extends JetView {
               this.addRowCss(row, "datatable-skipped");
             }
           });
-        },
-        onItemClick(id, e, node) {
         },
         onCheck(row, column, state) {
           /***
@@ -151,16 +143,9 @@ export default class ChartView extends JetView {
             obj.index = i + 1;
           });
         },
-        onBeforeDrag(ctx, ev) {
-        },
         onAfterDrop(ctx, ev) {
           const row = this.getItem(ctx.start);
           const {NUM, index} = row;
-          
-          // if (NUM !== index) {
-          //   this.data.each(v => {
-          //     this.updateItem(v.id, {...v, NUM: v.index});
-          //   });
           
           if (NUM !== index) {
             webix.ajax()
@@ -190,24 +175,16 @@ export default class ChartView extends JetView {
         onMouseMoving: debounce(function (ev) {
           try {
             const row = this.locate(ev).row;
-            
             if (row !== last_used_row) {
-              
               this.removeRowCss(last_used_row, "hover");
             }
-            
             this.addRowCss(row, "hover");
             last_used_row = row;
           } catch (er) {
-            console.log(er);
           }
         }, 15),
-        // onMouseOut: function (event) {
-        //   //console.log(event);
-        //   this.removeRowCss(last_used_row, "hover");
-        // }
       },
-      onMouseMove: {}
+      onMouseMove: {},
     };
   }
   
