@@ -2,20 +2,37 @@ import {JetView} from "webix-jet";
 import {debounce} from "../utils";
 
 export default class ChartView extends JetView {
-  config() {
-    let last_used_row;
+  constructor(app, config) {
+    super(app, config);
     
+    this.lastUsedRow = null;
+    this.onMouseMovingEvent = null;
+    
+    this.onMouseMovingHandler = debounce(function (ev) {
+      try {
+        const row = this.locate(ev).row;
+        if (row !== this.lastUsedRow) {
+          this.removeRowCss(this.lastUsedRow, "hover");
+        }
+        this.addRowCss(row, "hover");
+        this.lastUsedRow = row;
+      } catch (er) {
+      }
+    }, 15);
+    
+  }
+  
+  config() {
     return {
       view: "datatable",
       id: "dt",
-      // data: employees,
       url: "rest->http://192.168.1.35:3000/api/employees",
       save: "rest->http://192.168.1.35:3000/api/employees/change",
       columns: [
         // {id: "index", header: "#", width: 50},
         {
           id: "NUM",
-          header: {text: "Очередь" },
+          header: {text: "Очередь"},
           width: 95,
           sort: "int",
         },
@@ -61,8 +78,6 @@ export default class ChartView extends JetView {
       ],
       scroll: false,
       select: true,
-      autoheight: true,
-      // footer: true,
       css: "webix_shadow_medium webix_header_border ",
       editable: true,
       editaction: "dblclick",
@@ -143,8 +158,14 @@ export default class ChartView extends JetView {
             obj.index = i + 1;
           });
         },
-        onAfterDrop(ctx, ev) {
-          const row = this.getItem(ctx.start);
+        onBeforeDrag: (ctx, ev) => {
+          /***
+           *  Fix hover bug
+           * */
+          ctx.from.detachEvent(this.onMouseMovingEvent);
+        },
+        onAfterDrop: (ctx, ev) => {
+          const row = ctx.from.getItem(ctx.start);
           const {NUM, index} = row;
           
           if (NUM !== index) {
@@ -158,31 +179,22 @@ export default class ChartView extends JetView {
               })
               .then(json => {
                 console.log(json);
+                ctx.from.clearAll();
+                /***
+                 *  Fix hover bug
+                 * */
+                this.onMouseMovingEvent = ctx.from.attachEvent("onMouseMoving", this.onMouseMovingHandler);
                 
-                console.log("here");
-                this.clearAll();
-                return this.load(this.config.url.source);
+                return ctx.from.load(ctx.from.config.url.source);
               })
               .then(responce => {
                 return responce.json();
               })
               .then(json => {
-                
                 webix.message("Данные обновлены");
               });
           }
         },
-        onMouseMoving: debounce(function (ev) {
-          try {
-            const row = this.locate(ev).row;
-            if (row !== last_used_row) {
-              this.removeRowCss(last_used_row, "hover");
-            }
-            this.addRowCss(row, "hover");
-            last_used_row = row;
-          } catch (er) {
-          }
-        }, 15),
       },
       onMouseMove: {},
     };
@@ -191,5 +203,6 @@ export default class ChartView extends JetView {
   init(_$view, _$) {
     super.init(_$view, _$);
     
+    this.onMouseMovingEvent = _$view.attachEvent("onMouseMoving", this.onMouseMovingHandler);
   }
 }

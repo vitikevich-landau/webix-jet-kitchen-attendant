@@ -57,7 +57,7 @@ export default class TopView extends JetView {
                           filterHTML: false,
                           styles: true,
                           autowidth: true,
-                          docHeader: "График дежурства по кухне",
+                          docHeader: "График дежурства по кухне на " + new Date().toLocaleDateString(),
                           ignore: {
                             IS_ACTIVE: true,
                             SKIPPED: true,
