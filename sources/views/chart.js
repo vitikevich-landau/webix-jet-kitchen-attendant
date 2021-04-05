@@ -7,7 +7,7 @@ export default class ChartView extends JetView {
     
     this.lastUsedRow = null;
     this.onMouseMovingEvent = null;
-    this.itemTaken = false;
+    this.isItemTaken = false;
     
     this.onMouseMovingHandler = debounce(function (ev) {
       // console.log(this.onMouseMovingEvent);
@@ -164,7 +164,7 @@ export default class ChartView extends JetView {
           /***
            *  Fix hover bug
            * */
-          this.itemTaken = true;
+          this.isItemTaken = true;
           ctx.from.detachEvent(this.onMouseMovingEvent);
         },
         
@@ -208,8 +208,8 @@ export default class ChartView extends JetView {
     webix.event(document.body /*document.querySelector(".webix_dtable")*/, webix.env.mouse.up, e => {
       // console.log(this.itemTaken);
       
-      if (this.itemTaken) {
-        this.itemTaken = false;
+      if (this.isItemTaken) {
+        this.isItemTaken = false;
         this.onMouseMovingEvent = _$view.attachEvent("onMouseMoving", this.onMouseMovingHandler);
       }
     });
