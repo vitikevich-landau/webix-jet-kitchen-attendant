@@ -7,8 +7,10 @@ export default class ChartView extends JetView {
     
     this.lastUsedRow = null;
     this.onMouseMovingEvent = null;
+    this.itemTaken = false;
     
     this.onMouseMovingHandler = debounce(function (ev) {
+      // console.log(this.onMouseMovingEvent);
       try {
         const row = this.locate(ev).row;
         if (row !== this.lastUsedRow) {
@@ -162,11 +164,15 @@ export default class ChartView extends JetView {
           /***
            *  Fix hover bug
            * */
+          this.itemTaken = true;
           ctx.from.detachEvent(this.onMouseMovingEvent);
         },
+        
         onAfterDrop: (ctx, ev) => {
           const row = ctx.from.getItem(ctx.start);
           const {NUM, index} = row;
+          
+          console.log("here");
           
           if (NUM !== index) {
             webix.ajax()
@@ -180,10 +186,6 @@ export default class ChartView extends JetView {
               .then(json => {
                 console.log(json);
                 ctx.from.clearAll();
-                /***
-                 *  Fix hover bug
-                 * */
-                this.onMouseMovingEvent = ctx.from.attachEvent("onMouseMoving", this.onMouseMovingHandler);
                 
                 return ctx.from.load(ctx.from.config.url.source);
               })
@@ -202,6 +204,15 @@ export default class ChartView extends JetView {
   
   init(_$view, _$) {
     super.init(_$view, _$);
+    
+    webix.event(document.body /*document.querySelector(".webix_dtable")*/, webix.env.mouse.up, e => {
+      // console.log(this.itemTaken);
+      
+      if (this.itemTaken) {
+        this.itemTaken = false;
+        this.onMouseMovingEvent = _$view.attachEvent("onMouseMoving", this.onMouseMovingHandler);
+      }
+    });
     
     this.onMouseMovingEvent = _$view.attachEvent("onMouseMoving", this.onMouseMovingHandler);
   }
