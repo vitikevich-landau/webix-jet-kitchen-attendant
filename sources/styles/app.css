@@ -1,6 +1,7 @@
 .hover {
     /* My Styles */
-    background: lightGrey !important;
+    /*background: lightGrey !important;*/
+    background: #DDDDFF !important;
     opacity: .75;
 }
 

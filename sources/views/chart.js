@@ -172,8 +172,6 @@ export default class ChartView extends JetView {
           const row = ctx.from.getItem(ctx.start);
           const {NUM, index} = row;
           
-          console.log("here");
-          
           if (NUM !== index) {
             webix.ajax()
               .post(
